@@ -12,3 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 val SemiconGreen = Color(0xFF004D40)
 val SemiconLightGreen = Color(0xFF4DB6AC)
+
+val SemiconTitle = Color(0xFF8DBBA4)
+val SemiconSubtitle = Color(0xFFEEE6E6)

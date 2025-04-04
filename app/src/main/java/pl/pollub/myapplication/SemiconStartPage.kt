@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithCache
@@ -60,6 +61,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.delay
+import pl.pollub.myapplication.ui.theme.SemiconSubtitle
+import pl.pollub.myapplication.ui.theme.SemiconTitle
+
 
 @Composable
 fun SemiconStartPage(onGetStartedClick: () -> Unit = {}) {
@@ -75,12 +79,25 @@ fun SemiconStartPage(onGetStartedClick: () -> Unit = {}) {
         }
     }
 
+    var lightsOn by remember { mutableStateOf(false) }
+    var isBlinking by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        repeat(3) {
+            lightsOn = !lightsOn
+            delay(400)
+            lightsOn = false
+            delay(400)
+        }
+        isBlinking = false
+        lightsOn = true
+    }
+
     //ANIMACJE
     var showLogo by remember { mutableStateOf(false) }
     var showCircles by remember { mutableStateOf(false) }
     var showCar by remember { mutableStateOf(false) }
-    var showText by remember { mutableStateOf(false) }
-    var showButton by remember { mutableStateOf(false) }
+    var showContent by remember { mutableStateOf(false) }
 
     val alphaAnim by animateFloatAsState(
         targetValue = if (showCircles) 1f else 0f,
@@ -121,14 +138,12 @@ fun SemiconStartPage(onGetStartedClick: () -> Unit = {}) {
 
     LaunchedEffect(key1 = true) {
         showLogo = true
-        delay(300)
-        showCircles = true
         delay(200)
+        showCircles = true
+        delay(100)
         showCar = true
-        delay(500)
-        showText = true
-        delay(300)
-        showButton = true
+        delay(400)
+        showContent = true
     }
 
     Box(
@@ -269,20 +284,18 @@ fun SemiconStartPage(onGetStartedClick: () -> Unit = {}) {
 
             // SAMOCHÓD
             Image(
-                painter = painterResource(id = R.drawable.car_image),
+                painter = painterResource(
+                    id = if (lightsOn) R.drawable.car_light_on else R.drawable.car_light_off
+                ),
                 contentDescription = "Samochód",
                 modifier = Modifier
-                    .width(420.dp)
-                    .height(320.dp)
+                    .width(400.dp)
+                    .height(300.dp)
                     .padding(top = 50.dp)
+                    .alpha(carAlpha)
                     .zIndex(2f)
-                    .graphicsLayer {
-                        alpha = carAlpha
-                        scaleX = carScale
-                        scaleY = carScale
-                    },
-
-                contentScale = ContentScale.Fit
+                    .scale(carScale),
+                contentScale = ContentScale.Crop
             )
         }
 
@@ -296,19 +309,16 @@ fun SemiconStartPage(onGetStartedClick: () -> Unit = {}) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AnimatedVisibility(
-                visible = showText,
+                visible = showContent,
                 enter = fadeIn(animationSpec = tween(1000)) +
-                        slideInVertically(
-                            animationSpec = tween(1000),
-                            initialOffsetY = { it / 2 }
-                        )
+                        slideInVertically(animationSpec = tween(1000), initialOffsetY = { it / 2 })
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = "Poczuj się jak Kubica",
-                        color = Color(0xFF8DBBA4),
+                        color = SemiconTitle,
                         fontSize = 32.sp,
                         fontFamily = FontFamily(Font(R.font.lato_bold)),
                         fontWeight = FontWeight.Normal,
@@ -319,40 +329,29 @@ fun SemiconStartPage(onGetStartedClick: () -> Unit = {}) {
 
                     Text(
                         text = "Sterowanie telefonem zapewni Ci pełen komfort",
-                        color = Color(0xFF8DBBA4),
+                        color = SemiconSubtitle,
                         fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.lato_thin)),
+                        fontFamily = FontFamily(Font(R.font.lato_regular)),
                         textAlign = TextAlign.Center
                     )
-                }
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-            AnimatedVisibility(
-                visible = showButton,
-                enter = fadeIn(animationSpec = tween(1000)) +
-                        slideInVertically(
-                            animationSpec = tween(1000),
-                            initialOffsetY = { it / 2 }
+                    Button(
+                        onClick = onGetStartedClick,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                    ) {
+                        Text(
+                            text = "Zaczynajmy!",
+                            color = Color.Black,
+                            fontSize = 18.sp,
+                            fontFamily = FontFamily(Font(R.font.lato_bold)),
                         )
-            ) {
-                Button(
-                    onClick = onGetStartedClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White
-                    )
-                ) {
-                    Text(
-                        text = "Zaczynajmy!",
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontFamily = FontFamily(Font(R.font.lato_bold)),
-                    )
+                    }
                 }
             }
         }
