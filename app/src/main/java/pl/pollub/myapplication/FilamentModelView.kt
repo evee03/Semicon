@@ -87,12 +87,11 @@ class ModelRenderer {
         surfaceView.setOnTouchListener { _, event ->
             modelViewer.onTouchEvent(event)
             if (event.action == MotionEvent.ACTION_MOVE) {
-                val camera = modelViewer.camera // Get the camera managed by ModelViewer
-                val position = camera.getPosition(null) // Returns FloatArray(3) [x, y, z]
-                val forward = camera.getForwardVector(null) // Returns FloatArray(3) [x, y, z] pointing where the camera looks
-                // You can also get camera.upVector or camera.leftVector if needed
+                val camera = modelViewer.camera
+                val position = camera.getPosition(null)
+                val forward = camera.getForwardVector(null)
 
-                // Log the values using a specific tag
+
                 Log.d("ModelTransform", "Camera Pos: X=${position[0]}, Y=${position[1]}, Z=${position[2]}")
                 Log.d("ModelTransform", "Camera Fwd: X=${forward[0]}, Y=${forward[1]}, Z=${forward[2]}")
 
@@ -105,9 +104,7 @@ class ModelRenderer {
 
         createRenewables(character)
 
-        // Przybliżenie modelu przez zmianę pozycji kamery
-        //modelViewer.camera.lookAt(-1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0);        // Usunięcie tworzenia światła z skyboxem
-        // createLight()
+
 
 
         val engine = modelViewer.engine
@@ -155,153 +152,6 @@ class ModelRenderer {
 
         }
     }
-//fun createRenewables(name: String) {
-//    val buffer = assets.open(name).use { input ->
-//        val bytes = ByteArray(input.available())
-//        input.read(bytes)
-//        ByteBuffer.allocateDirect(bytes.size).apply {
-//            order(ByteOrder.nativeOrder())
-//            put(bytes)
-//            rewind()
-//        }
-//    }
-//
-//    // Consider loading the texture *before* the model or ensuring it's ready
-//    val texture = loadPngTexture("textures/textures.png") // Load your texture
-//
-//    modelViewer.loadModelGlb(buffer)
-//    modelViewer.transformToUnitCube()
-//    modelViewer.camera.setScaling(2.0, 2.0) // Adjust scaling as needed
-//
-//    // It's often better to wait until the model is fully loaded if modifying materials.
-//    // model-viewer might handle this, but for direct engine manipulation, be cautious.
-//    // You might need a listener or check asset properties if issues persist.
-//
-//    val engine = modelViewer.engine
-//    val scene = modelViewer.scene // Get the scene
-//
-//    Log.d("renderables", "Processing model: $name")
-//
-//    // Ensure asset and its entities are ready.
-//    // modelViewer.asset might be non-null before entities are fully processed by engine.
-//    // If problems persist, investigate model loading completion callbacks/state.
-//    val asset = modelViewer.asset ?: return // Asset might be null if loading failed
-//    val renderables = asset.renderableEntities // Get Entities with renderable components
-//
-//    if (renderables.isEmpty()) {
-//        Log.w("renderables", "Model '$name' has no renderable entities.")
-//        return
-//    }
-//
-//    val rm = engine.renderableManager
-//
-//    // --- Corrected Loop ---
-//    for (entity in renderables) {
-//        val instance = rm.getInstance(entity) // Get the Renderable Instance handle
-//        if (instance == 0) {
-//            // This entity doesn't have a valid Renderable component instance known to the manager
-//            Log.w("renderables", "Skipping entity $entity: No valid RenderableManager instance.")
-//            continue
-//        }
-//
-//        // Check how many primitives this renderable has (optional but good practice)
-//        val primitiveCount = rm.getPrimitiveCount(instance)
-//        if (primitiveCount == 0) {
-//            Log.w("renderables", "Skipping entity $entity (instance $instance): Has 0 primitives.")
-//            continue
-//        }
-//
-//        // Assuming you want to modify the material of the first primitive (index 0)
-//        if (primitiveCount > 0) {
-//            Log.d("renderables", "Processing entity $entity (instance $instance), primitive 0")
-//            // *** Use the 'instance' handle here, not 'entity' ***
-//            val materialInstance = rm.getMaterialInstanceAt(instance, 0)
-//
-//            if (materialInstance == null) {
-//                Log.e("renderables", "Entity $entity (instance $instance), Primitive 0 has NULL material instance!")
-//                continue // Skip if no material instance found
-//            }
-//
-//            // Now it's safe to set the parameter
-//            if (texture != null) {
-//                Log.d("renderables", "Applying texture to material instance of entity $entity")
-//                // Make sure the parameter name "baseColorMap" is correct for your model's material
-//                try {
-//                    materialInstance.setParameter(
-//                        "baseColorMap", // Or "albedoMap", check your material definition
-//                        texture,
-//                        TextureSampler() // Use default sampler settings
-//                    )
-//                } catch (e: Exception) {
-//                    Log.e("renderables", "Failed to set texture parameter for entity $entity: ${e.message}", e)
-//                    // This might happen if the parameter name is wrong or types mismatch
-//                }
-//            } else {
-//                Log.w("renderables", "Texture is null, cannot apply to entity $entity.")
-//            }
-//        } else {
-//            // Handle cases where you might want to iterate over all primitives if > 1
-//            Log.d("renderables", "Entity $entity (instance $instance) has multiple primitives ($primitiveCount). Currently only processing primitive 0.")
-//            // You could loop from 0 until primitiveCount here if needed
-//        }
-//    }
-//    Log.d("renderables", "Finished processing renderables for $name")
-//}
-
-    // Your loadPngTexture function seems okay, but ensure the texture format
-// (SRGB8_A8) is appropriate. RGBA8 might also work depending on your needs.
-// Keep the existing loadPngTexture function as it is for now.
-    fun loadPngTexture(name: String): Texture? {
-        // ... (your existing implementation)
-        try {
-            assets.open(name).use { input ->
-                val rawBitmap = BitmapFactory.decodeStream(input)
-                val bitmap = rawBitmap?.copy(Bitmap.Config.ARGB_8888, false)
-
-                if (bitmap == null) {
-                    Log.e("Texture", "Failed to decode $name")
-                    return null
-                }
-                val buffer = ByteBuffer.allocateDirect(bitmap.byteCount)
-                buffer.order(ByteOrder.nativeOrder()) // Use native order
-                bitmap.copyPixelsToBuffer(buffer)
-                buffer.rewind()
-
-                val texture = Texture.Builder()
-                    .width(bitmap.width)
-                    .height(bitmap.height)
-                    .levels(1) // No mipmaps for basic loading
-                    .sampler(Texture.Sampler.SAMPLER_2D)
-                    // SRGB8_A8 is often correct for color textures.
-                    // If colors look wrong, try Texture.InternalFormat.RGBA8
-                    .format(Texture.InternalFormat.SRGB8_A8)
-                    .build(modelViewer.engine)
-
-                texture.setImage(
-                    modelViewer.engine,
-                    0, // Level 0
-                    Texture.PixelBufferDescriptor(
-                        buffer,
-                        Texture.Format.RGBA, // Format of the data in the buffer
-                        Texture.Type.UBYTE   // Type of the data in the buffer
-                        // Optional: Add a handler to free the buffer when Filament is done
-                        // , AndroidTextureHelper.textureCleanup(buffer)
-                    )
-                )
-
-                // Optional: Generate mipmaps if needed for better quality at distances
-                // texture.generateMipmaps(modelViewer.engine)
-
-                Log.d("Texture", "Loaded texture: $name -> $texture")
-                bitmap.recycle() // Recycle the Android bitmap once data is in buffer
-                return texture
-            }
-        } catch (e: IOException) {
-            Log.e("Texture", "Error loading texture $name: ${e.message}", e)
-            return null
-        }
-    }
-
 
     private fun readCompressedAsset(name:String) : ByteBuffer{
 
