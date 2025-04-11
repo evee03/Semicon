@@ -32,6 +32,7 @@ class ModelRenderer {
     private lateinit var modelViewer: ModelViewer
 
 
+
     private val assets: AssetManager
         get() = surfaceView.context.assets
 
