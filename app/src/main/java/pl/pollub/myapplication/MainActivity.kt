@@ -18,29 +18,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import pl.pollub.myapplication.control.ControlScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    var showStartPage by remember { mutableStateOf(true) }
-
-                    if (showStartPage) {
-                        SemiconStartPage(
-                            onGetStartedClick = {
-                                showStartPage = false
-
-                            }
-                        )
-                    } else {
-
-                    }
-                }
+                ControlScreen()
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    var showStartPage by remember { mutableStateOf(true) }
+//
+//                    if (showStartPage) {
+//                        SemiconStartPage(
+//                            onGetStartedClick = {
+//                                showStartPage = false
+//
+//                            }
+//                        )
+//                    } else {
+//
+//                    }
+//                }
             }
         }
     }
