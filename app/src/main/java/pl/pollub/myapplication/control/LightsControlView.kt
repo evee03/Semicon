@@ -1,6 +1,5 @@
 package pl.pollub.myapplication.control
 
-import android.service.controls.Control
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,10 +46,10 @@ fun LightsControlView() {
     ) {
         Column(
             modifier = Modifier
-                .width(250.dp)
+                .width(320.dp)
                 .fillMaxHeight()
                 .padding(vertical = 30.dp)
-                .padding(horizontal = 10.dp),
+                .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ){
@@ -58,7 +57,7 @@ fun LightsControlView() {
                 painter = painterResource(id = R.drawable.control_lights),
                 contentDescription = "Lights icon",
                 modifier = Modifier
-                    .size(64.dp)
+                    .weight(1f)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -101,7 +100,7 @@ fun LightsControlView() {
                 .weight(1f)
                 .fillMaxHeight()
                 .padding(vertical = 10.dp)
-                .padding(horizontal = 60.dp)
+                .padding(horizontal = 30.dp)
         ){
             Text("Ustaw kolor świateł", color = Color.White)
             ColorPicker(

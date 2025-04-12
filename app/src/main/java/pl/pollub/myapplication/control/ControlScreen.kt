@@ -95,7 +95,7 @@ fun ControlScreen() {
             //WYSWIETLENIE ZAWARTOSCI STRONY W ZALEZNOSCI OD ZAKLADKI
             when (selectedTab) {
                 "Światła" -> LightsControlView()
-//            "Drzwi" ->
+                "Drzwi" -> DoorsControlView()
 //            "Prędkość" ->
 //            "Kierowanie" ->
             }
