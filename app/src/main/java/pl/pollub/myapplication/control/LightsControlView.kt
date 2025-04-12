@@ -1,5 +1,6 @@
 package pl.pollub.myapplication.control
 
+import android.service.controls.Control
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -7,26 +8,26 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import pl.pollub.myapplication.R
-import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import com.github.skydoves.colorpicker.compose.AlphaSlider
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.github.skydoves.colorpicker.compose.AlphaTile
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
+import pl.pollub.myapplication.R
+import pl.pollub.myapplication.ui.theme.ControlBackground
+import pl.pollub.myapplication.ui.theme.GreenNeon
+
 
 @Composable
 fun LightsControlView() {
@@ -42,15 +43,16 @@ fun LightsControlView() {
             .background(Color(0xFF1C1C20), RoundedCornerShape(16.dp))
             .padding(24.dp),
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
             modifier = Modifier
                 .width(250.dp)
                 .fillMaxHeight()
-                .padding(vertical = 30.dp),
+                .padding(vertical = 30.dp)
+                .padding(horizontal = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.SpaceEvenly
         ){
             Image(
                 painter = painterResource(id = R.drawable.control_lights),
@@ -64,7 +66,7 @@ fun LightsControlView() {
             Spacer(modifier = Modifier.height(8.dp))
             Box(
                 modifier = Modifier
-                    .border(BorderStroke(1.dp, Color(0xFF75FBCF)), shape = RoundedCornerShape(9))
+                    .border(BorderStroke(1.dp, GreenNeon), shape = RoundedCornerShape(9))
             ){
                 Row(
                     modifier = Modifier
@@ -76,15 +78,15 @@ fun LightsControlView() {
                         Button(
                             onClick = { selectedLights = tab },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (isActive) Color(0xFF75FBCF) else Color(0xFF202229)
+                                containerColor = if (isActive) GreenNeon else ControlBackground
                             ),
                             shape = RoundedCornerShape(7),
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(
                                 tab,
-                                color = if (isActive) Color(0xFF202229) else Color.White,
-                                fontSize = 10.sp
+                                color = if (isActive) ControlBackground else Color.White,
+                                fontSize = 12.sp
                             )
                         }
                     }
@@ -99,19 +101,28 @@ fun LightsControlView() {
                 .weight(1f)
                 .fillMaxHeight()
                 .padding(vertical = 10.dp)
-                .padding(horizontal = 50.dp)
+                .padding(horizontal = 60.dp)
         ){
             Text("Ustaw kolor świateł", color = Color.White)
-            ColorPicker(selectedColor, onColorChange = { newColor ->
-                selectedColor = newColor
-            })
+            ColorPicker(
+                selectedColor = selectedColor,
+                onColorChange = { newColor -> selectedColor = newColor },
+                selectedLights = selectedLights,
+                onLightsChange = { newMode -> selectedLights = newMode }
+                )
+
         }
 
     }
 }
 
 @Composable
-fun ColorPicker(selectedColor: Color, onColorChange: (Color) -> Unit) {
+fun ColorPicker(
+    selectedColor: Color,
+    onColorChange: (Color) -> Unit,
+    selectedLights: String,
+    onLightsChange: (String) -> Unit
+) {
     val controller = rememberColorPickerController()
     Row(
         modifier = Modifier
@@ -130,7 +141,7 @@ fun ColorPicker(selectedColor: Color, onColorChange: (Color) -> Unit) {
                         .padding(vertical = 8.dp),
                     controller = controller,
                     onColorChanged = { colorEnvelope: ColorEnvelope ->
-//                        onColorChange(Color(colorEnvelope.color.toArgb()))
+                        onColorChange(Color(colorEnvelope.color.toArgb()))
                     }
                 )
                 Row(
@@ -160,7 +171,7 @@ fun ColorPicker(selectedColor: Color, onColorChange: (Color) -> Unit) {
                     horizontalArrangement = Arrangement.End,
                 ){
                     Text(
-                        "Wybrano:",
+                        "Wybrano: ",
                         style = TextStyle(fontSize = 12.sp),
                         color = Color.White
                     )
@@ -178,11 +189,13 @@ fun ColorPicker(selectedColor: Color, onColorChange: (Color) -> Unit) {
                 ){
                     Button(
                         onClick = {
-                            //ZMIEN KOLOR SWIATEL
+                            //TUTAJ MOZNA WYSLAC TRYB I KOLOR SWIATEL
+
+
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF75FBCF),
-                            contentColor = Color(0xFF202229)
+                            containerColor = GreenNeon,
+                            contentColor = ControlBackground
                         ),
                         shape = RoundedCornerShape(50)
                     ) {
@@ -193,14 +206,16 @@ fun ColorPicker(selectedColor: Color, onColorChange: (Color) -> Unit) {
                     }
                     Button(
                         onClick = {
-//                            onColorChange(Color.White)
+                            onColorChange(Color.White)
+                            controller.selectCenter(fromUser = false)
+                            onLightsChange("Stałe")
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF202229),
+                            containerColor = ControlBackground,
                             contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(50),
-                        border = BorderStroke(1.dp, Color(0xFF75FBCF))
+                        border = BorderStroke(1.dp, GreenNeon)
                     ) {
                         Text(
                             "Przywróć domyślne",

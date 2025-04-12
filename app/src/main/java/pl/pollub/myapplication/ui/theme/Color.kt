@@ -15,3 +15,7 @@ val SemiconLightGreen = Color(0xFF4DB6AC)
 
 val SemiconTitle = Color(0xFF8DBBA4)
 val SemiconSubtitle = Color(0xFFEEE6E6)
+
+//CONTROL PANEL
+var GreenNeon = Color(0xFF75FBCF)
+var ControlBackground = Color(0xFF202229)
