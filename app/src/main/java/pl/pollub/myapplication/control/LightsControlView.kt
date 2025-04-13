@@ -40,7 +40,8 @@ fun LightsControlView() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF1C1C20), RoundedCornerShape(16.dp))
-            .padding(24.dp),
+            .padding(vertical = 15.dp)
+            .padding(horizontal = 5.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -214,7 +215,7 @@ fun ColorPicker(
                             contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(50),
-                        border = BorderStroke(1.dp, GreenNeon)
+                        border = BorderStroke(1.dp, Color.Gray)
                     ) {
                         Text(
                             "Przywróć domyślne",

@@ -39,7 +39,8 @@ fun DoorsControlView() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF1C1C20), RoundedCornerShape(16.dp))
-            .padding(24.dp),
+            .padding(vertical = 15.dp)
+            .padding(horizontal = 15.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {

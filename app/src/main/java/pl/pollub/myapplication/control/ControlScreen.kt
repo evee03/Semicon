@@ -34,7 +34,8 @@ fun ControlScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF080C09))
-            .padding(16.dp)
+            .padding(horizontal = 15.dp)
+            .padding(vertical = 5.dp)
     ) {
         //NAWIGACJA W ZAKŁADCE STEROWANIE
         Row(
@@ -42,7 +43,7 @@ fun ControlScreen() {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            listOf("Światła", "Drzwi", "Prędkość", "Kierowanie").forEach { tab ->
+            listOf("Światła", "Drzwi", "Kierowanie").forEach { tab ->
                 val isActive = selectedTab == tab
                 Button(
                     onClick = { selectedTab = tab },
@@ -52,12 +53,11 @@ fun ControlScreen() {
                     border = if (!isActive) BorderStroke(1.dp, GreenNeon) else null,
                     shape = RoundedCornerShape(50),
                     modifier = Modifier
-                        .height(50.dp)
+                        .height(40.dp)
                 ) {
                     val iconPainter = when (tab) {
                         "Światła" -> painterResource(id = R.drawable.control_nav_lights)
                         "Drzwi" -> painterResource(id = R.drawable.control_nav_doors)
-                        "Prędkość" -> painterResource(id = R.drawable.control_nav_speed)
                         "Kierowanie" -> painterResource(id = R.drawable.control_nav_steering)
                         else -> null
                     }
@@ -79,12 +79,11 @@ fun ControlScreen() {
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
+                .padding(vertical = 20.dp)
                 .shadow(
                     elevation = 8.dp,
                     shape = RoundedCornerShape(16.dp),
@@ -96,8 +95,7 @@ fun ControlScreen() {
             when (selectedTab) {
                 "Światła" -> LightsControlView()
                 "Drzwi" -> DoorsControlView()
-//            "Prędkość" ->
-//            "Kierowanie" ->
+                "Kierowanie" -> SteeringView()
             }
         }
     }

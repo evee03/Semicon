@@ -61,4 +61,6 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
+    implementation ("androidx.compose.foundation:foundation:1.7.8")
+
 }
