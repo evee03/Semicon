@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.scenecore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -58,6 +59,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.compose.ui:ui:1.8.0-rc01")
     implementation ("androidx.compose.material3:material3:1.1.2")
+    implementation ("com.google.android.filament:filament-android:1.42.1")
+    implementation ("com.google.android.filament:filament-utils-android:1.42.1")
+    implementation ("com.google.android.filament:gltfio-android:1.42.1")
+
+   // implementation("com.google.android.filament-utils:filament-android-utils:1.32.1")
+
+
 
     implementation(libs.androidx.navigation.compose)
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
